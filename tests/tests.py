@@ -82,6 +82,15 @@ class ArrowModelFieldTests(TestCase):
         result = list(serializers.deserialize("json", data))
         self.assertEqual(result[0].object.birthday, arrow.get(2000, 6, 1))
 
+    def test_set_datetime(self):
+        """Allow to set datetime values, need to be converted to arrow after a full clean"""
+        person = Person.objects.get()
+        person.birthday = arrow.get(1990, 6, 1).datetime
+        person.full_clean()
+        self.assertIsInstance(person.birthday, arrow.Arrow)
+        self.assertEqual(person.birthday, arrow.get(1990, 6, 1))
+
+
 
 class ArrowFormFieldTests(TestCase):
     def setUp(self):
