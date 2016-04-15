@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
+
 import arrow
 from django.db.models import DateTimeField, SubfieldBase
+
 from .form_fields import ArrowField as ArrowFormField
 
 
@@ -17,8 +19,10 @@ class ArrowField(DateTimeField):
             return arrow.get(value)
 
     def get_prep_value(self, value):
-        if value:
+        if isinstance(value, arrow.Arrow):
             return value.datetime
+        else:
+            return value
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)

@@ -1,9 +1,8 @@
 from __future__ import unicode_literals
+
 import arrow
-from django.conf import settings
 from django.forms import DateTimeField
 from django.utils import timezone
-from django.forms.util import from_current_timezone, to_current_timezone
 
 
 class ArrowField(DateTimeField):
@@ -21,13 +20,12 @@ class ArrowField(DateTimeField):
 
     def prepare_value(self, value):
         if isinstance(value, arrow.Arrow):
-                return value.naive
+            return value.naive
         return super(ArrowField, self).to_python(value)
 
     def to_python(self, value):
         if isinstance(value, arrow.Arrow):
-            value.to(timezone.get_current_timezone())
-            return value
+            return value.to(timezone.get_current_timezone())
         return super(ArrowField, self).to_python(value)
 
     def strptime(self, value, format):
